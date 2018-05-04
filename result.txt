@@ -1,0 +1,42 @@
+root@localhost employee_db>SELECT * FROM Employee WHERE employee_name LIKE '%n%' AND salary > 6000;
++-------------+---------------+--------------+-----------------+----------+--------+
+| employee_id | employee_name | employee_age | employee_gender | work_for | salary |
++-------------+---------------+--------------+-----------------+----------+--------+
+|           1 | 'xiaohong'    |           19 | 'female'        |        1 |   7000 |
++-------------+---------------+--------------+-----------------+----------+--------+
+1 row in set (0.00 sec)
+
+root@localhost employee_db>SELECT company_name,employee_name FROM Company
+    -> INNER JOIN Employee ON company_id = work_for AND salary >= (SELECT MAX(salary) FROM Employee WHERE work_for = company_id);
++--------------+---------------+
+| company_name | employee_name |
++--------------+---------------+
+| 'baidu'      | 'xiaoming'    |
+| 'alibaba'    | 'xiaohong'    |
+| 'tengxun'    | 'xiaozhi'     |
++--------------+---------------+
+3 rows in set (0.33 sec)
+
+root@localhost employee_db>SELECT company_name,average_salary FROM Company;
++--------------+----------------+
+| company_name | average_salary |
++--------------+----------------+
+| 'baidu'      |           1000 |
+| 'alibaba'    |           2000 |
+| 'tengxun'    |           3000 |
++--------------+----------------+
+3 rows in set (0.00 sec)
+
+root@localhost employee_db>SELECT Employee.*,company_name,average_salary FROM Employee
+    -> INNER JOIN Company
+    -> ON work_for = company_id WHERE Employee.salary > average_salary;
++-------------+---------------+--------------+-----------------+----------+--------+--------------+----------------+
+| employee_id | employee_name | employee_age | employee_gender | work_for | salary | company_name | average_salary |
++-------------+---------------+--------------+-----------------+----------+--------+--------------+----------------+
+|           0 | 'xiaoming'    |           20 | 'male'          |        0 |   6000 | 'baidu'      |           1000 |
+|           1 | 'xiaohong'    |           19 | 'female'        |        1 |   7000 | 'alibaba'    |           2000 |
+|           2 | 'xiaozhi'     |           15 | 'male'          |        2 |   8000 | 'tengxun'    |           3000 |
+|           3 | 'xiaogang'    |           16 | 'male'          |        1 |   6000 | 'alibaba'    |           2000 |
+|           4 | 'xiaoxia'     |           15 | 'female'        |        0 |   4000 | 'baidu'      |           1000 |
++-------------+---------------+--------------+-----------------+----------+--------+--------------+----------------+
+5 rows in set (0.00 sec)
